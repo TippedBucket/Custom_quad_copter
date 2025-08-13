@@ -2,7 +2,8 @@
 Built a quadcopter from scratch with a custom flight controller, PCB, and 3D printed frame.
 # IMAGES
 <img width="1135" height="653" alt="drone_cad" src="https://github.com/user-attachments/assets/305603f1-a768-4526-bec5-df28c89e8a84" />
-<img width="172" height="657" alt="drone_cad_pcb" src="https://github.com/user-attachments/assets/5537ae67-951e-4ff8-ad6d-aab0eaa84b2b" />
+<img width="1135" height="372" alt="image" src="https://github.com/user-attachments/assets/aa0f86ea-0ae5-442f-a9d8-7fcc8bb83ea0" />
+
 
 ![drone_v1_finished](https://github.com/user-attachments/assets/289871b1-89b2-41e8-b077-453acba0df4d)
 ![Drone_v1_half](https://github.com/user-attachments/assets/07bd4d18-22e3-4b6d-bea0-040b096e6fef)
