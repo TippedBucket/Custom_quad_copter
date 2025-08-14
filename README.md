@@ -37,33 +37,39 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 *Note, this project is incredibly complex and will have individual nuances based on the parts you buy and how low-level you go. For example, I wanted to try and create my flight controller from scratch because I wanted to understand how all these electrical and physical systems interact with one another to make my drone fly, rather than just build the drone. 
 
 # FLASHING RECEIVER FIRMWARE
-This was the longest and most annoying part of the drone. In an effort to make this project cheap. I bought a second-hand flight controller and set of receivers for 20 bucks, which is a really good deal. Unfortunately, these receivers were so old, that they only had firmware that supported Pulse Width Modulation(PWM) instead of Pulse Position Modulation(PPM). I wanted to complete this project using PPM so I wouldnt need to have a bunch of uneccesary wires on my drone and its easier to work with in my opnion. 
 
-Luckily for me, though, FrSky, the company that had made these receivers, released a firmware flash that would allow the receivers to operate in PPM instead of PWM back in 2010 or something. However, they want you to buy a custom cable that would plug in to your pc and receiver and flash the firmware onto the receiver. And because I am cheap and creative, I decided "I can do this myself"! So I watched the following videos and scrolled through old internet forums for ages to figure out how to make this work
-- [Flashing Frsky D8R-II Plus for CPPM](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms))
-- [This Video from 12 years ago](https://www.youtube.com/watch?v=NQQJ29dAt5E)
-- [This forum explaining FTDI chip Workarond](https://diydrones.com/profiles/blogs/frsky-s-cppm-at-27msec-firmware-update-with-ft-prog-and-ftdi-cabl?id=705844%3ABlogPost%3A1001090)
+This was the longest and most annoying part of the drone build. In an effort to make this project cheap, I bought a second-hand flight controller and set of receivers for 20 bucks, which was a really good deal. Unfortunately, these receivers were so old that they only had firmware supporting Pulse Width Modulation (PWM) instead of Pulse Position Modulation (PPM). I wanted to complete this project using PPM so I wouldn’t need a bunch of unnecessary wires on my drone, and because it’s easier to work with in my opinion.
+
+See this video of my initial motor setup. At this point, I was naïve and thought the receiver was already able to run in PPM mode — this was before I realized it wasn’t.
+
+Luckily for me, FrSky (the company that made these receivers) had released a firmware flash that allows the receivers to operate in PPM instead of PWM, way back in 2010 or so. However, they want you to buy a custom cable that plugs into your PC and receiver to flash the firmware. Because I’m cheap and creative, I decided, "I can do this myself!" So I watched the following videos and scrolled through old internet forums for ages to figure out how to make this work:
+
+- [Flashing FrSky D8R-II Plus for CPPM](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms))  
+- [This Video from 12 years ago](https://www.youtube.com/watch?v=NQQJ29dAt5E)  
+- [This forum explaining FTDI chip workaround](https://diydrones.com/profiles/blogs/frsky-s-cppm-at-27msec-firmware-update-with-ft-prog-and-ftdi-cabl?id=705844%3ABlogPost%3A1001090)  
 - [Link to Manual & Firmware](https://www.frsky-rc.com/d8r-ii-plus/)
-- 
+
+---
 
 ## FRSky CPPM Firmware Update (27 ms Frame Length)
 
-### Summary 
-FRSky released a **27 ms CPPM firmware** for D8R-XP and D4R-II receivers (and also could be used for D8R-II-Plus. This increases the frame length, making it compatible with all channels while still providing a usable update rate (~37 Hz), which is more than enough for most drone applications.
+### Summary
+FRSky released a **27 ms CPPM firmware** for D8R-XP and D4R-II receivers (which can also be used on the D8R-II Plus). This increases the frame length, making it compatible with all channels while still providing a usable update rate (~37 Hz), which is more than enough for most drone applications.
 
 The firmware update requires a **USB-to-TTL serial adapter with inverted logic**. FRSky’s official cable has this built in, but you can modify a standard FTDI adapter using FTDI’s `FT_PROG` utility to invert TXD and RXD signals.
 
 ---
 
 ### Logic Behind the Fix
-1. **Problem** – The 18 ms CPPM frame couldn’t carry 8 channels + sync pulse without signal issues.  
-2. **Solution** – Increase the frame length to 27 ms via firmware update.  
-3. **Challenge** – Updating requires an inverted-TTL adapter; most generic FTDI cables are non-inverted.  
-4. **Workaround** – Use FTDI’s `FT_PROG` tool to configure a normal FTDI cable to invert TX and RX signals, making it function like FRSky’s official cable.
 
+- **Problem** – The 18 ms CPPM frame couldn’t carry 8 channels + sync pulse without signal issues.  
+- **Solution** – Increase the frame length to 27 ms via firmware update.  
+- **Challenge** – Updating requires an inverted-TTL adapter; most generic FTDI cables are non-inverted.  
+- **Workaround** – Use FTDI’s `FT_PROG` tool to configure a normal FTDI cable to invert TX and RX signals, making it function like FRSky’s official cable.
 
+---
 
-### Steps Followed for FTDI fix
+### Steps Followed for FTDI Fix
 
 #### 1. Obtain the Firmware
 - Download the official **27 ms CPPM firmware** for your receiver (D8R-XP or D4R-II) from FRSky’s site.  
@@ -89,37 +95,35 @@ The firmware update requires a **USB-to-TTL serial adapter with inverted logic**
 
 ---
 
-And so I followed these steps but unfortunately, I quickly learned that the chip I got was a Knock-off and could only read and not write the firmware with FTDI chips. So I was back to square one. But while I was trying out that option, I discovered a new method that uses an old RS232 serial cable that you would plug into computers from a more archaic but reliable time (1960-1990). The problem with that being that unfortunately, finding a computer with an RS232 port in the back is like finding a needle in a haystack, they just dont seem to exist anymore. So I went online and bought a USB to RS232 cable from the amazing land of Amazon and folowed the below steps: 
+I followed these steps but quickly learned that the chip I had was a knock-off and could only read — not write — firmware via FTDI. So I was back to square one. While trying that option, I discovered another method using an old RS232 serial cable from the days of older PCs (1960s–1990s). The problem was that finding a computer with an RS232 port now is like finding a needle in a haystack. So I went online and bought a USB-to-RS232 cable from Amazon and followed the steps below:
 
-
+---
 
 ## Flashing the FrSky D8R-II Plus Receiver for 27 ms CPPM
 
 ### Steps
 
 1. **Enter Programming Mode**  
-   - Place a jumper between **signal pins 7 and 8** on the receiver.
-   - You can use a female-to-female servo lead with the ground pin removed.
-    <img width="200" height="181" alt="image" src="https://github.com/user-attachments/assets/06a06507-3b7b-4fa3-bf8b-5720eb245861" />
+   - Place a jumper between **signal pins 7 and 8** on the receiver.  
+   - You can use a female-to-female servo lead with the ground pin removed.  
+   <img width="200" height="181" alt="image" src="https://github.com/user-attachments/assets/06a06507-3b7b-4fa3-bf8b-5720eb245861" />
 
 2. **Prepare the Firmware**  
-   - Download the `d8rxp_cppm27_build120926` firmware (D8R-XP firmware works on D8R-II Plus).
+   - Download the `d8rxp_cppm27_build120926` firmware (D8R-XP firmware works on D8R-II Plus).  
    - Install the **FRSky Update Tool** on your PC.
 
 3. **Connect to the Receiver**  
    - Connect your PC’s serial adapter to the receiver’s data port.  
-   - Power the receiver using a BEC or battery (e.g., 4-cell NiCad) through a normal servo connector.
-    <img width="200" height="169" alt="image" src="https://github.com/user-attachments/assets/e9c959a1-a10f-4b10-bb07-9386024e372e" />
+   - Power the receiver using a BEC or battery (e.g., 4-cell NiCad) through a normal servo connector.  
+   <img width="200" height="169" alt="image" src="https://github.com/user-attachments/assets/e9c959a1-a10f-4b10-bb07-9386024e372e" />
 
 4. **Flash the Firmware**  
    - Open the FRSky Update Tool.  
-   - Select the correct **COM Port**.
-    <img width="200" height="141" alt="image" src="https://github.com/user-attachments/assets/68611623-b40f-4ea3-a4f9-d3108b241a4e" />
-
+   - Select the correct **COM Port**.  
+     <img width="200" height="141" alt="image" src="https://github.com/user-attachments/assets/68611623-b40f-4ea3-a4f9-d3108b241a4e" />  
    - Click **File** and select the `.frk` firmware file.  
-   - Apply power to the receiver.
-    <img width="200" height="150" alt="image" src="https://github.com/user-attachments/assets/1726774d-ba63-4f07-83f8-f0948bd461d3" />
- 
+   - Apply power to the receiver.  
+     <img width="200" height="150" alt="image" src="https://github.com/user-attachments/assets/1726774d-ba63-4f07-83f8-f0948bd461d3" />  
    - Wait for numbers to appear in the tool’s status bar (connection confirmed).  
    - Click **Download** to start flashing.
 
@@ -127,14 +131,17 @@ And so I followed these steps but unfortunately, I quickly learned that the chip
    - Once complete, remove the jumper from pins 7 and 8.  
    - Your D8R-II Plus is now running the **27 ms CPPM firmware**.
 
-When it arrived, I booted up the [firmware updating tool from FrSky](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms)) and tried to flash some firmware! But when I went to press start I had it where the firmware update would hang at 2% and not move after a half hour... something had gone wrong. :(
+---
 
-See this [Video](https://drive.google.com/drive/folders/1ts3oPTAEXRkO45mbIy6gj0AwYRl2nPlM) of the failed flashing
+When my USB-to-RS232 cable arrived, I booted up the firmware updating tool from FrSky and tried to flash the firmware. Unfortunately, the update would hang at 2% and not move after half an hour.  
 
-As the video mentions, I ended up hosting an old Windows XP virtual box because I read online it could be an issue with the drivers mismatching on my modern device, yet this still didn't work. So again I thought it might be something with this USB to serial cable being a knockoff, and I decided to try one last option and borrow a cable from a friend. And on the first try with this new cable, it managed to work. So it turned out I had another cheap knock off that was holding me back. 
+See this [video of the failed flashing](https://drive.google.com/file/d/1AMVjHAr2IZpz9En8QaMZe7ojqr5RKQkH/view?usp=sharing).
 
-See this [Video](https://drive.google.com/drive/folders/1ts3oPTAEXRkO45mbIy6gj0AwYRl2nPlM) of me showing the updated steup!
+I tried running the update on a Windows XP virtual machine because I read online it could be a driver mismatch issue on modern systems. That still didn’t work. I then suspected the USB-to-RS232 cable was another cheap knock-off. I borrowed a cable from a friend and — on the first try — it worked perfectly. Turns out, yet again, a knock-off cable was the problem.
 
+See this [video showing the updated setup](https://drive.google.com/file/d/1rLf_xIebGQjxXqM2hLLjGMtLDWKhd2ks/view?usp=sharing).
+
+With this complete, I was able to move on to creating my flight controller and starting to assemble parts of the drone.
 
 
 
