@@ -31,7 +31,7 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 - **Custom PCB**: See repository files for the CAD
 - **GPS and RF receiver/transmitter**: For return to home functionality and transmitting onboard tellmetry
 - **Zenre Diode**: This is to protect the Teensy from positive overvoltage and make sure no more than 2.4V are sent to the Teensy during flight
-- **Diode**: This is to protect the Teensy for if the battery is connected backwards 
+- **Diode**: This is to protect the Teensy in case the battery is connected backwards 
   
 # COMPLETED STEPS
 *Note, this project is incredibly complex and will have individual nuances based on the parts you buy and how low-level you go. For example, I wanted to try and create my flight controller from scratch because I wanted to understand how all these electrical and physical systems interact with one another to make my drone fly, rather than just build the drone. 
@@ -204,7 +204,10 @@ IS= the sense current & IL= the load current
  <p align="center"> <img width="271" height="474" alt="image" src="https://github.com/user-attachments/assets/9064c5e8-2403-4f0e-bd18-a2af95fb0e83" />
 
 # GYROSCOPE DATA 
-- Still adding to repository, its a bit of a pain to explain it in a concise matter, it invlov
+- Still adding to the repository, its a bit of a pain to explain it in a concise manner.
+
+I do have this [video](https://drive.google.com/file/d/1Po-wbf2U2on4HzSrH_cp68A0m3Z-3Hng/view?usp=sharing) that explains my process as well. 
+
 # FLIGHT CONTROLLER
 - See the custom flight controller code. See my calculations [here](). I made an effort to comment on a large part of it to explain what each portion does in the file, but here is a summarized version and model for example:
 
@@ -308,7 +311,23 @@ IS= the sense current & IL= the load current
 
 I decided to go for a two-layer design, with the top deck housing the custom PCB, and the bottom deck housing the battery, motors, ESC's and receiver
 
--intially I had a design where I wanted to fit the 
+Watch the following videos that explain the build and my inevitable errors:
+
+1. Here is the start of the drone build with all of the parts laid out in front of me: [Video](https://drive.google.com/file/d/10FTYLxngko3ZVX6kpAmoYjMvnUgoiWGs/view?usp=sharing)
+2. Here is me realizing the through holes on the PCB are too small: [Video](https://drive.google.com/file/d/1eGK8pEr8rMolSd1DH1gIe2S_LdZ1yqPG/view?usp=sharing)
+3. Part way through with the motors installed on the 3D printed frame: [Video](https://drive.google.com/file/d/1YMXku_3mcqGyyf-MrYE_OPKMxHtCHsn0/view?usp=sharing)
+4. Putting the PCB on the drone: [Video](https://drive.google.com/file/d/1IcQBouGu6mBpUM9sKOM20tn6mhx78m-Z/view?usp=sharing)
+5. Melting the frame and ESC's: [Video](https://drive.google.com/file/d/1SSw2YJpkfLMbkT3AN8nqGTa5H7lycGUD/view?usp=sharing)
+6. Getting the ESC's in the new frame design: [Video](https://drive.google.com/file/d/1oaC5sDsaksApU2KCozBs9dubZ3h84hCP/view?usp=sharing)
+7. Troubleshooting why the flight controller doesn't read the receiver part 1: [Video](https://drive.google.com/file/d/1aSEzoUKJ_HvczeFbsfdl0h4L8z9v6Gtn/view?usp=sharing)
+8. Troubleshooting why the flight controller doesn't read the receiver part 2: [Video](https://drive.google.com/file/d/1lSz1u5O0nWWgjtPsY7BaAvMTFavgq9Eo/view?usp=sharing)
+- I need to sync the throttle stick with the ESC's. What was happening was that my lower limit would detect that some of the motors were above the 1200us signal, which is 20% on startup and wouldnt let them sync until they got under the 1200 value. That's why when I moved it the drone in space, some of them would turn on because to adjust for pitch, roll or yaw the Teensy would change the throttle to each motor
+9. Lost a acron nut that holds the probs on, was very annoying: [Video](https://drive.google.com/file/d/1XVzy0FqegYIW8WolcCVFOm9dWHwhiDg2/view?usp=sharing)
+10: Flight/Crash: [Video](https://drive.google.com/file/d/1r8M76LuhZofkKAh2jp2q1FSLw5-cAF6A/view?usp=sharing)
+  - I had an issue with drone balance and PID values :(
+11: Second flight and crash analysis [Video](https://drive.google.com/file/d/1cwSvYa4iCwbFyBzoppMPRrBW7JtSsLgZ/view?usp=sharing)
+- This was separate from the last flight. It did fly a little, but I just sucked at flying it and flew it into a wall because I had never flown a drone before.
+12: Playing around with GPS: [Video](https://drive.google.com/file/d/1scRlQk5yIf79fLuZpXvnPLzCcN8gl_pQ/view?usp=sharing)
 
 # LEARNINGS 
 
