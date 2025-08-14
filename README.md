@@ -89,9 +89,51 @@ The firmware update requires a **USB-to-TTL serial adapter with inverted logic**
 
 ---
 
-And so I followed these steps but unfortunately, I quickly learned that the chip I got was a Knock-off and could only read and not write the firmware with FTDI chips. So I was back to square one. But while I was trying out that option, I discovered a new method that uses an old RS232 serial cable that you would plug into computers from a more archaic but reliable time (1960-1990). The problem with that being that unfortunately, finding a computer with an RS232 port in the back is like finding a needle in a haystack, they just dont seem to exist anymore. So I went online and bought a USB to RS232 cable from the amazing land of Amazon. 
+And so I followed these steps but unfortunately, I quickly learned that the chip I got was a Knock-off and could only read and not write the firmware with FTDI chips. So I was back to square one. But while I was trying out that option, I discovered a new method that uses an old RS232 serial cable that you would plug into computers from a more archaic but reliable time (1960-1990). The problem with that being that unfortunately, finding a computer with an RS232 port in the back is like finding a needle in a haystack, they just dont seem to exist anymore. So I went online and bought a USB to RS232 cable from the amazing land of Amazon and folowed the below steps: 
 
-When it arrived I booted up the [firmware updating tool from FrSky](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms)) and tried to flash some firmware! But when I went to press start I had it where the firmware update would hang at 2% and not move after a half hour... something had gone wrong. :(
+
+
+## Flashing the FrSky D8R-II Plus Receiver for 27 ms CPPM
+
+### Steps
+
+1. **Enter Programming Mode**  
+   - Place a jumper between **signal pins 7 and 8** on the receiver.
+   - You can use a female-to-female servo lead with the ground pin removed.
+    <img width="200" height="181" alt="image" src="https://github.com/user-attachments/assets/06a06507-3b7b-4fa3-bf8b-5720eb245861" />
+
+2. **Prepare the Firmware**  
+   - Download the `d8rxp_cppm27_build120926` firmware (D8R-XP firmware works on D8R-II Plus).
+   - Install the **FRSky Update Tool** on your PC.
+
+3. **Connect to the Receiver**  
+   - Connect your PC’s serial adapter to the receiver’s data port.  
+   - Power the receiver using a BEC or battery (e.g., 4-cell NiCad) through a normal servo connector.
+    <img width="200" height="169" alt="image" src="https://github.com/user-attachments/assets/e9c959a1-a10f-4b10-bb07-9386024e372e" />
+
+4. **Flash the Firmware**  
+   - Open the FRSky Update Tool.  
+   - Select the correct **COM Port**.
+    <img width="200" height="141" alt="image" src="https://github.com/user-attachments/assets/68611623-b40f-4ea3-a4f9-d3108b241a4e" />
+
+   - Click **File** and select the `.frk` firmware file.  
+   - Apply power to the receiver.
+    <img width="200" height="150" alt="image" src="https://github.com/user-attachments/assets/1726774d-ba63-4f07-83f8-f0948bd461d3" />
+ 
+   - Wait for numbers to appear in the tool’s status bar (connection confirmed).  
+   - Click **Download** to start flashing.
+
+5. **Finish**  
+   - Once complete, remove the jumper from pins 7 and 8.  
+   - Your D8R-II Plus is now running the **27 ms CPPM firmware**.
+
+When it arrived, I booted up the [firmware updating tool from FrSky](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms)) and tried to flash some firmware! But when I went to press start I had it where the firmware update would hang at 2% and not move after a half hour... something had gone wrong. :(
+
+See this [Video](https://drive.google.com/drive/folders/1ts3oPTAEXRkO45mbIy6gj0AwYRl2nPlM) of the failed flashing
+
+As the video mentions, I ended up hosting an old Windows XP virtual box because I read online it could be an issue with the drivers mismatching on my modern device, yet this still didn't work. So again I thought it might be something with this USB to serial cable being a knockoff, and I decided to try one last option and borrow a cable from a friend. And on the first try with this new cable, it managed to work. So it turned out I had another cheap knock off that was holding me back. 
+
+See this [Video](https://drive.google.com/drive/folders/1ts3oPTAEXRkO45mbIy6gj0AwYRl2nPlM) of me showing the updated steup!
 
 
 
