@@ -31,7 +31,8 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 - **Custom PCB**: See repository files for the CAD
 - **GPS and RF receiver/transmitter**: For return to home functionality and transmitting onboard tellmetry
 - **Zenre Diode**: This is to protect the Teensy from positive overvoltage and make sure no more than 2.4V are sent to the Teensy during flight
-- **Diode**: This is to protect the Teensy in case the battery is connected backwards 
+- **Diode**: This is to protect the Teensy in case the battery is connected backwards
+- **3D Printer**: For prototyping and itteration
   
 # COMPLETED STEPS
 *Note, this project is incredibly complex and will have individual nuances based on the parts you buy and how low-level you go. For example, I wanted to try and create my flight controller from scratch because I wanted to understand how all these electrical and physical systems interact with one another to make my drone fly, rather than just build the drone. 
@@ -206,10 +207,10 @@ IS= the sense current & IL= the load current
 # GYROSCOPE DATA 
 - Still adding to the repository, its a bit of a pain to explain it in a concise manner.
 
-I do have this [video](https://drive.google.com/file/d/1Po-wbf2U2on4HzSrH_cp68A0m3Z-3Hng/view?usp=sharing) that explains my process as well. 
+- I do have this [video](https://drive.google.com/file/d/1Po-wbf2U2on4HzSrH_cp68A0m3Z-3Hng/view?usp=sharing) that explains my process as well. 
 
 # FLIGHT CONTROLLER
-- See the custom flight controller code. See my calculations [here](). I made an effort to comment on a large part of it to explain what each portion does in the file, but here is a summarized version and model for example:
+- See the custom flight controller code. See my calculations [here](https://github.com/TippedBucket/Custom_quad_copter/tree/main/custom_flight_controller). I made an effort to comment on a large part of it to explain what each portion does in the file, but here is a summarized version and model for example:
 
 <img width="1979" height="1580" alt="image" src="https://github.com/user-attachments/assets/2c25126b-cc2d-4fda-8b50-7b8d89ad2dce" />
 
