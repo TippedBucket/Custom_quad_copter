@@ -41,7 +41,7 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 
 This was the longest and most annoying part of the drone build. In an effort to make this project cheap, I bought a second-hand flight controller and set of receivers for 20 bucks, which was a really good deal. Unfortunately, these receivers were so old that they only had firmware supporting Pulse Width Modulation (PWM) instead of Pulse Position Modulation (PPM). I wanted to complete this project using PPM so I wouldn’t need a bunch of unnecessary wires on my drone, and because it’s easier to work with in my opinion.
 
-See this video of my initial motor setup. At this point, I was naïve and thought the receiver was already able to run in PPM mode — this was before I realized it wasn’t.
+See this video of my initial motor setup. At this point, I was naïve and thought the receiver was already able to run in PPM mode,  this was before I realized it wasn’t.
 
 Luckily for me, FrSky (the company that made these receivers) had released a firmware flash that allows the receivers to operate in PPM instead of PWM, way back in 2010 or so. However, they want you to buy a custom cable that plugs into your PC and receiver to flash the firmware. Because I’m cheap and creative, I decided, "I can do this myself!" So I watched the following videos and scrolled through old internet forums for ages to figure out how to make this work:
 
@@ -96,7 +96,7 @@ The firmware update requires a **USB-to-TTL serial adapter with inverted logic**
 
 ---
 
-I followed these steps but quickly learned that the chip I had was a knock-off and could only read — not write — firmware via FTDI. So I was back to square one. While trying that option, I discovered another method using an old RS232 serial cable from the days of older PCs (1960s–1990s). The problem was that finding a computer with an RS232 port now is like finding a needle in a haystack. So I went online and bought a USB-to-RS232 cable from Amazon and followed the steps below:
+I followed these steps but quickly learned that the chip I had was a knock-off and could only read, not write,  firmware via FTDI. So I was back to square one. While trying that option, I discovered another method using an old RS232 serial cable from the days of older PCs (1960s–1990s). The problem was that finding a computer with an RS232 port now is like finding a needle in a haystack. So I went online and bought a USB-to-RS232 cable from Amazon and followed the steps below:
 
 ---
 
@@ -138,7 +138,7 @@ When my USB-to-RS232 cable arrived, I booted up the firmware updating tool from 
 
 See this [video of the failed flashing](https://drive.google.com/file/d/1AMVjHAr2IZpz9En8QaMZe7ojqr5RKQkH/view?usp=sharing).
 
-I tried running the update on a Windows XP virtual machine because I read online it could be a driver mismatch issue on modern systems. That still didn’t work. I then suspected the USB-to-RS232 cable was another cheap knock-off. I borrowed a cable from a friend and — on the first try — it worked perfectly. Turns out, yet again, a knock-off cable was the problem.
+I tried running the update on a Windows XP virtual machine because I read online it could be a driver mismatch issue on modern systems. That still didn’t work. I then suspected the USB-to-RS232 cable was another cheap knock-off. I borrowed a cable from a friend and  on the first try, it worked perfectly. Turns out, yet again, a knock-off cable was the problem.
 
 See this [video showing the updated setup](https://drive.google.com/file/d/1rLf_xIebGQjxXqM2hLLjGMtLDWKhd2ks/view?usp=sharing).
 
