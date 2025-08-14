@@ -97,8 +97,105 @@ IS= the sense current & IL= the load current
  <p align="center"> <img width="271" height="474" alt="image" src="https://github.com/user-attachments/assets/9064c5e8-2403-4f0e-bd18-a2af95fb0e83" />
 
 # GYROSCOPE DATA 
-- This part took some time too and involved reading hexidecimal 
+- Still Updating
 # FLIGHT CONTROLLER
+- See the custom flight controller code. See my calculations [here](). I made an effort to comment on a large part of it to explain what each portion does in the file, but here is a summarized version and model for example:
+
+<img width="1979" height="1580" alt="image" src="https://github.com/user-attachments/assets/2c25126b-cc2d-4fda-8b50-7b8d89ad2dce" />
+
+
+## Flight Controller Code Overview
+
+### 1. Libraries and Constants
+- **Wire.h** – For I²C communication with the MPU6050 IMU.
+- **PulsePosition.h** – For decoding PPM signals from the RC receiver.
+- Constants for gyro sensitivity, loop time (`Ts`), and hardware addresses.
+
+---
+
+### 2. Global Variables
+- **Gyro & Accelerometer Data** – Raw rates, calibration offsets, angles, and accelerations.
+- **Receiver Values** – Up to 8 PPM channels stored in `ReceiverValue[]`.
+- **Battery & Power Tracking** – Voltage, current, consumed mAh, starting capacity.
+- **PID Variables** – Separate P, I, D values for roll, pitch, yaw, and angle control loops.
+- **Motor Outputs** – Individual control values for each ESC.
+- **Kalman Filter Variables** – For smoothing and combining gyro + accelerometer data to estimate angles.
+
+---
+
+### 3. Helper Functions
+
+#### 3.1 Kalman Filter
+- `kalman_1d()` – Estimates roll and pitch angles by combining gyro rates and accelerometer measurements, reducing noise.
+
+#### 3.2 Battery Monitoring
+- `battery_voltage()` – Reads ADC pins for battery voltage and current (current from high-side switch sense pin).
+
+#### 3.3 Receiver Input
+- `read_receiver()` – Reads PPM signal from the RC receiver and stores it in the `ReceiverValue[]` array.
+
+#### 3.4 IMU Reading
+- `gyro_signals()` –
+  - Configures MPU6050 low-pass filter, accelerometer range, and gyro sensitivity.
+  - Reads raw accelerometer and gyro data via I²C.
+  - Converts to physical units (deg/sec, g’s) and calculates pitch/roll angles from accelerometer.
+
+#### 3.5 PID Control
+- `pid_equation()` –
+  - Calculates P, I, and D terms for a given error.
+  - Applies anti-windup limits for I-term and clamps overall output.
+  - Returns output, error, and I-term for reuse in the next loop iteration.
+- `reset_pid()` – Resets PID state when motors are off to prevent stored error from causing jumps.
+
+#### 3.6 Debug Output
+- `printReceiverValues()` – Serial prints motor output values for tuning/debugging.
+
+---
+
+### 4. Setup
+- Sets pin modes for LEDs, motor outputs, and safety signals.
+- Initializes I²C at 400kHz.
+- Wakes MPU6050 from sleep mode.
+- Calibrates gyro by averaging 2000 samples.
+- Sets motor PWM frequency (250Hz) and resolution (12-bit).
+- Reads starting battery voltage and estimates starting capacity.
+- Initializes PPM receiver input.
+- Starts the loop timer for precise control loop timing.
+
+---
+
+### 5. Main Control Loop (250Hz, every 4ms)
+
+#### 5.1 Sensor Reading & Calibration
+- Reads gyro and accelerometer data.
+- Applies calibration offsets.
+- Runs Kalman filter to get smoothed roll & pitch angles.
+
+#### 5.2 RC Input Processing
+- Reads throttle, pitch, roll, yaw from receiver.
+- Converts joystick positions to desired angles or rates.
+
+#### 5.3 Angle PID Loop
+- Outer loop: Compares desired angles to actual angles (from Kalman filter) to compute desired angular rates for roll & pitch.
+
+#### 5.4 Rate PID Loop
+- Inner loop: Compares desired angular rates to measured gyro rates to compute control inputs for motors.
+
+#### 5.5 Motor Mixing
+- Combines throttle + roll + pitch + yaw corrections to calculate outputs for each motor.
+- Clamps motor outputs to avoid exceeding max throttle or going below minimum sustain power.
+- Cuts motors entirely if throttle channel is below cutoff threshold.
+
+#### 5.6 Output to ESCs
+- Sends PWM signals to each motor via `analogWrite()`.
+
+#### 5.7 Battery Monitoring & Safety
+- Updates consumed mAh based on measured current and loop time.
+- Calculates remaining percentage.
+- Turns on warning LED if battery is below 30%.
+
+#### 5.8 Loop Timing Control
+- Waits until exactly 4ms has passed since loop start to maintain a steady 250Hz control loop rate.
 
 # LEARNINGS 
 
