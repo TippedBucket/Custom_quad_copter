@@ -37,7 +37,65 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 *Note, this project is incredibly complex and will have individual nuances based on the parts you buy and how low-level you go. For example, I wanted to try and create my flight controller from scratch because I wanted to understand how all these electrical and physical systems interact with one another to make my drone fly, rather than just build the drone. 
 
 # FLASHING RECEIVER FIRMWARE
-This by far, was the longest and most annoying part of the drone. In an effort to this project cheaply, 
+This was the longest and most annoying part of the drone. In an effort to make this project cheap. I bought a second-hand flight controller and set of receivers for 20 bucks, which is a really good deal. Unfortunately, these receivers were so old, that they only had firmware that supported Pulse Width Modulation(PWM) instead of Pulse Position Modulation(PPM). I wanted to complete this project using PPM so I wouldnt need to have a bunch of uneccesary wires on my drone and its easier to work with in my opnion. 
+
+Luckily for me, though, FrSky, the company that had made these receivers, released a firmware flash that would allow the receivers to operate in PPM instead of PWM back in 2010 or something. However, they want you to buy a custom cable that would plug in to your pc and receiver and flash the firmware onto the receiver. And because I am cheap and creative, I decided "I can do this myself"! So I watched the following videos and scrolled through old internet forums for ages to figure out how to make this work
+- [Flashing Frsky D8R-II Plus for CPPM](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms))
+- [This Video from 12 years ago](https://www.youtube.com/watch?v=NQQJ29dAt5E)
+- [This forum explaining FTDI chip Workarond](https://diydrones.com/profiles/blogs/frsky-s-cppm-at-27msec-firmware-update-with-ft-prog-and-ftdi-cabl?id=705844%3ABlogPost%3A1001090)
+- [Link to Manual & Firmware](https://www.frsky-rc.com/d8r-ii-plus/)
+- 
+
+## FRSky CPPM Firmware Update (27 ms Frame Length)
+
+### Summary 
+FRSky released a **27 ms CPPM firmware** for D8R-XP and D4R-II receivers (and also could be used for D8R-II-Plus. This increases the frame length, making it compatible with all channels while still providing a usable update rate (~37 Hz), which is more than enough for most drone applications.
+
+The firmware update requires a **USB-to-TTL serial adapter with inverted logic**. FRSky’s official cable has this built in, but you can modify a standard FTDI adapter using FTDI’s `FT_PROG` utility to invert TXD and RXD signals.
+
+---
+
+### Logic Behind the Fix
+1. **Problem** – The 18 ms CPPM frame couldn’t carry 8 channels + sync pulse without signal issues.  
+2. **Solution** – Increase the frame length to 27 ms via firmware update.  
+3. **Challenge** – Updating requires an inverted-TTL adapter; most generic FTDI cables are non-inverted.  
+4. **Workaround** – Use FTDI’s `FT_PROG` tool to configure a normal FTDI cable to invert TX and RX signals, making it function like FRSky’s official cable.
+
+
+
+### Steps Followed for FTDI fix
+
+#### 1. Obtain the Firmware
+- Download the official **27 ms CPPM firmware** for your receiver (D8R-XP or D4R-II) from FRSky’s site.  
+- Inside the ZIP file, read the included PDF for official flashing instructions.
+
+#### 2. Prepare the FTDI Adapter
+- Download [`FT_PROG`](https://ftdichip.com/utilities/#FT_PROG) from FTDI Utilities.  
+- Plug in your FTDI cable and open `FT_PROG`.  
+- Go to `Devices → Scan and Parse` to detect the adapter.  
+- In the **Device Tree**, select **Hardware Specific** and enable inversion for **TXD** and **RXD**.  
+- Click the flash icon, then **Program** to save the changes.
+
+#### 3. Connect to the Receiver
+- Power the receiver using the FTDI cable’s **5 V** pin.  
+- **Cross-connect**: FTDI **TX → RX** on receiver, FTDI **RX → TX** on receiver.  
+- Connect **GND → GND**.
+
+#### 4. Flash the Firmware
+- Use the FRSky firmware update tool (or equivalent) to load the new firmware to the receiver.
+
+#### 5. (Optional) Revert the FTDI
+- Run `FT_PROG` again and uncheck the inversion boxes to restore the adapter to normal operation.
+
+---
+
+And so I followed these steps but unfortunately, I quickly learned that the chip I got was a Knock-off and could only read and not write the firmware with FTDI chips. So I was back to square one. But while I was trying out that option, I discovered a new method that uses an old RS232 serial cable that you would plug into computers from a more archaic but reliable time (1960-1990). The problem with that being that unfortunately, finding a computer with an RS232 port in the back is like finding a needle in a haystack, they just dont seem to exist anymore. So I went online and bought a USB to RS232 cable from the amazing land of Amazon. 
+
+When it arrived I booted up the [firmware updating tool from FrSky](https://www.rcgroups.com/forums/showthread.php?2112954-Flashing-Frsky-D8R-II-Plus-for-CPPM-(27ms)) and tried to flash some firmware! But when I went to press start I had it where the firmware update would hang at 2% and not move after a half hour... something had gone wrong. :(
+
+
+
+
 
 # BATTERY MANAGEMENT 
 There are a few main considerations here:
@@ -76,24 +134,24 @@ IS= the sense current & IL= the load current
 - This ratio allows us to interpt remaining battery life while we fly.
 
 ## SHORTING PROTECTION
-- In order to protect the Teensy micro controller, we need to use a [Zener Diode](https://www.digikey.ca/en/products/detail/onsemi/BZX79C2V4-T50A/977904). During a short circuit where the current exceeds 85A, (0.039[V/A] * 85 [A]= 3.315[V]) the voltage to the Teensy would exceed the maximum limit and fry our expensive piece of equipment. The Zener diode, will shunt excess current to the ground and clamp the voltage so it never rises above 2.4V for this specific one.
-- However, we can are still only protected on a over voltage on the positive side, meaning that if the battery is connected backware, the Zener wont help. To protect for the negative direction a [normal diode](https://www.digikey.ca/en/products/detail/onsemi/1N4007G/1485479) is also in place to block nagative voltages.
+- In order to protect the Teensy microcontroller, we need to use a [Zener Diode](https://www.digikey.ca/en/products/detail/onsemi/BZX79C2V4-T50A/977904). During a short circuit where the current exceeds 85A, (0.039[V/A] * 85 [A]= 3.315[V]) the voltage to the Teensy would exceed the maximum limit and fry our expensive piece of equipment. The Zener diode will shunt excess current to the ground and clamp the voltage so it never rises above 2.4V for this specific one.
+- However, we can are still only protected on a overvoltage on the positive side, meaning that if the battery is connected backware, the Zener wont help. To protect for the negative direction a [normal diode](https://www.digikey.ca/en/products/detail/onsemi/1N4007G/1485479) is also in place to block nagative voltages.
   
 ## BATTERY PROTECTION
 - The [BTS50080-1TMB Power Swtich](https://www.infineon.com/assets/row/public/documents/10/49/infineon-bts50080-1tmb-ds-en.pdf?fileId=5546d4625a888733015aa435ca67114f) protects the battery with the following process: 
 1. **Current Monitoring Inside the Switch**
-   - The switch contrinouslyt monitors the drop voltage across its MOSFET
+   - The switch continuously monitors the drop voltage across its MOSFET
    - Once the drop voltage rises above 3.5V, the device recognizes a fault
 
 2. **Current Limitng**
-   - As soon as the short occurs, the device limites the load current to a defined value up to 90 A depedning on the supply voltage, which prevents an uncontrolled current surge that could hurt that battery
+   - As soon as the short occurs, the device limits the load current to a defined value up to 90 A, depending on the supply voltage, which prevents an uncontrolled current surge that could hurt the battery
 3. **Turn Off Fast**
-   - If the overcurrent persists (350us-650us) the switch turns off completly and latches the off state, isolating the battery
+   - If the overcurrent persists (350us-650us) the switch turns off completely and latches the off state, isolating the battery
 4. **Thermal Protection as Backup**
-   - If the short circuit detection doesnt trigger first, risning internal temps over 175 will trigger a shutdown and turn the switch off.
+   - If the short circuit detection doesn't trigger first, rising internal temps over 175 will trigger a shutdown and turn the switch off.
 
 ## BATTERY LIFE
-- I used this table to determine the approximate time before the drones LED would turn red. Theoretically I could cycle the battery with an arduino script I wrote for UBC-Chem-E-Car to determine the battery voltage capacity relationship but this graph seemed to work for the mean time.<br>
+- I used this table to determine the approximate time before the drone's LED would turn red. Theoreticall, I could cycle the battery with an arduino script I wrote for [UBC-Chem-E-Car](https://www.ubcchemecar.com/) to determine the battery voltage capacity relationship but this graph seemed to work for the meantime.<br>
  <p align="center"> <img width="271" height="474" alt="image" src="https://github.com/user-attachments/assets/9064c5e8-2403-4f0e-bd18-a2af95fb0e83" />
 
 # GYROSCOPE DATA 
