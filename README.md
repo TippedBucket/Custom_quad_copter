@@ -30,8 +30,8 @@ Built a quadcopter from scratch with a custom flight controller, PCB, and 3D pri
 - **LiPO Battery Charger**: So we can fly the drone more than once
 - **Custom PCB**: See repository files for the CAD
 - **GPS and RF receiver/transmitter**: For return to home functionality and transmitting onboard tellmetry
-- **Zenre Diode**: This is to protect the Teensy and make sure no more than 2.4V are sent to the Teensy during flight
-- **Diode** 
+- **Zenre Diode**: This is to protect the Teensy from positive overvoltage and make sure no more than 2.4V are sent to the Teensy during flight
+- **Diode**: This is to protect the Teensy for if the battery is connected backwards 
   
 # COMPLETED STEPS
 *Note, this project is incredibly complex and will have individual nuances based on the parts you buy and how low-level you go. For example, I wanted to try and create my flight controller from scratch because I wanted to understand how all these electrical and physical systems interact with one another to make my drone fly, rather than just build the drone. 
@@ -97,7 +97,7 @@ IS= the sense current & IL= the load current
  <p align="center"> <img width="271" height="474" alt="image" src="https://github.com/user-attachments/assets/9064c5e8-2403-4f0e-bd18-a2af95fb0e83" />
 
 # GYROSCOPE DATA 
-- Still Updating
+- Still adding to repository, its a bit of a pain to explain it in a concise matter, it invlov
 # FLIGHT CONTROLLER
 - See the custom flight controller code. See my calculations [here](). I made an effort to comment on a large part of it to explain what each portion does in the file, but here is a summarized version and model for example:
 
@@ -197,16 +197,36 @@ IS= the sense current & IL= the load current
 #### 5.8 Loop Timing Control
 - Waits until exactly 4ms has passed since loop start to maintain a steady 250Hz control loop rate.
 
+# DRONE BUILDING
+
+I decided to go for a two-layer design, with the top deck housing the custom PCB, and the bottom deck housing the battery, motors, ESC's and receiver
+
+-intially I had a design where I wanted to fit the 
+
 # LEARNINGS 
 
+Key Takeaways From This Build:
+
+One of the biggest lessons I learned is that sensors are never really 100% accurate. The raw MPU6050 data is messy, and I discovered how important filtering is, especially using a Kalman filter to merge accelerometer and gyro readings into something stable enough for flight. I also realized that tuning PIDs is more of an art form than a science. You can’t just drop in random numbers; finding the balance between responsiveness and stability takes patience, and it’s surprisingly easy to make the drone behave unpredictably. And flip it and break a month's worth of progress :(.
+
+Running the control loop at 250Hz showed me how much needs to happen in just 4 milliseconds. Reading sensors, processing inputs, running two layers of PID control, and still hitting timing precisely. I also learned that battery voltage alone doesn’t tell the full story. Voltage drops under high throttle, doesn't  mean the battery is dying, so current sensing and smarter power monitoring became essential to determine whether my drone was going to fall out of they sky.
+
+Safety features turned out to be just as important as flight performance. Cutoff thresholds, LED warnings, and protective diodes aren’t just nice extra, they can prevent damage to ESCs, motors, or the flight controller. When I first started this project I had safety in mind from the beginning. I've worked with experimental batteries before and seeing those things explode in a controlled environment gave me the necessary fear to approach this in a low-risk way, and research and design my build to mitigate for risk. 
+
+Finally, I learned that in a drone, everything affects everything. From the hardware that makes up your drone to small changes in receiver scaling or motor mixing, they ripple through the entire system, so learning to make adjustments in small, careful steps saved me from additional major headaches. And ALWAYS MAKE A BACKUP OF YOUR CODE. I may have lost a chunk of my flight controller do to a saving issue at one point. 
 
   
 # NEXT STEPS
-- I'm currently working on implementing the GPS and Return to Home functionality. I took a small break on the project to pursue a couple of other ideas, such as my Pokémon card detector project and my video game idea. 
+- I'm currently working on implementing the GPS and Return to Home functionality. I took a small break on the project to pursue a couple of other ideas, such as my Pokémon card detector project and my video game idea.
+- UI for GPS navigation, live telemetry, and return to home functionality from the following script:
+- <img width="1176" height="795" alt="GUI_drone" src="https://github.com/user-attachments/assets/1fcf5431-bb27-4794-847b-5e4d67fc4116" />
+
+-I'm also working on adding Lidar object avoidance and maybe some object detection with my Raspberry Pi & SONYIMX500 Ai Camera that is repurposed from my [Pokemon Card Detector](https://github.com/TippedBucket/Pokemon_card_detector-)
 
 
 # RESOURCES AND ACCREDITATION 
-I did a lot of learning in this project, and this would not have been possible to create without the following resources and playlists on building drones!
-- [CarbonAeruonautics](https://github.com/CarbonAeronautics/Manual-Quadcopter-Drone/tree/main) 
-- [Imetomi](https://www.instructables.com/Ultimate-Intelligent-Fully-Automatic-Drone-Robot-w/) 
-- [Joop Brokking](https://www.youtube.com/@Joop_Brokking)
+I did a lot of learning in this project, and this would not have been possible without the following resources and playlists on building drones!
+- [CarbonAeruonautics](https://github.com/CarbonAeronautics/Manual-Quadcopter-Drone/tree/main) Electronics, wiring, Flight Controls
+- [Imetomi](https://www.instructables.com/Ultimate-Intelligent-Fully-Automatic-Drone-Robot-w/) Idea inspiration
+- [Joop Brokking](https://www.youtube.com/@Joop_Brokking) Electronics & GPS
+- [Steve Brunton](https://www.youtube.com/watch?v=s_9InuQAx-g) Kalman Filter & PID Controls
