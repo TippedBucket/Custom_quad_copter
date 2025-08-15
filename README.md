@@ -308,6 +308,9 @@ IS= the sense current & IL= the load current
 #### 5.8 Loop Timing Control
 - Waits until exactly 4ms has passed since loop start to maintain a steady 250Hz control loop rate.
 
+
+[Here](https://github.com/TippedBucket/Custom_quad_copter/tree/main/custom_flight_controller) are pictures of the math/calculations for my flight controller.
+
 # DRONE BUILDING
 
 I decided to go for a two-layer design, with the top deck housing the custom PCB, and the bottom deck housing the battery, motors, ESC's and receiver
