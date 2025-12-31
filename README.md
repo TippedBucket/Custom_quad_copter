@@ -152,7 +152,7 @@ There are a few main considerations here:
 1. We dont want to fry our flight controller, the Tessny's max allowable voltage is 3.3V. Which is way too low when we are dealing with an 11.1V 3S Battery.
 2. We want to protect our battery from a short circuit, no flying flaming drones please.
 3. We want to accurately measure our current and voltage to estimate the battery life remaining.
-To solve this problem, we are going to use a fancy [transistor](https://www.digikey.ca/en/products/detail/infineon-technologies/BTS500801TMBAKSA1/2080779) for power management, as well as a [Zener Diode](https://www.digikey.ca/en/products/detail/onsemi/BZX79C2V4-T50A/977904) from that nasty high voltage.
+To solve this problem, we are going to use a fancy [power switch](https://www.digikey.ca/en/products/detail/infineon-technologies/BTS500801TMBAKSA1/2080779) for power management, as well as a [Zener Diode](https://www.digikey.ca/en/products/detail/onsemi/BZX79C2V4-T50A/977904) from that nasty high voltage.
 Here is a summary of what the transistor does:
 - High-side power switch for 12 V systems — replaces relays/fuses.
 - Load current sensing – outputs a proportional sense current for monitoring.
